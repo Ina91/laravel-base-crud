@@ -40,6 +40,7 @@ class ShoeController extends Controller
     {
 
         $data=$request->all();  //prendo sotto forma di array i dati
+        //validazione
         $request->validate([
         'modello' => 'required|max:100|min:3',
         'marca' => 'required|max:100',
@@ -80,9 +81,9 @@ class ShoeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Shoe $shoe)
     {
-        //
+        return view('create',compact('shoe'));
     }
 
     /**
@@ -92,9 +93,14 @@ class ShoeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Shoe $shoe)
     {
-        //
+        $data = $request->all();
+        $request->validate([
+
+        $shoe->update($data);
+
+        return view('show',compact('shoe'));
     }
 
     /**
@@ -103,8 +109,9 @@ class ShoeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Shoe $shoe)
     {
-        //
+        $shoe->delete();
+        return redirect()->route('shoes.index');
     }
 }
