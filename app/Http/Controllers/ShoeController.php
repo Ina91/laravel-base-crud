@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Shoe;
+use App\Shoe;  //collegamento al model
 
 class ShoeController extends Controller
 {
@@ -40,16 +40,19 @@ class ShoeController extends Controller
     {
 
         $data=$request->all();  //prendo sotto forma di array i dati
+        $request->validate([
+        'modello' => 'required|max:100|min:3',
+        'marca' => 'required|max:100',
+        'taglia' => 'required|numeric|max:50',
+        ]);
         $shoeNew = new Shoe;
-        $shoeNew->modello = $data['modello'];
-        $shoeNew->marca = $data['marca'];
-        $shoeNew->taglia = $data['taglia'];
+        $shoeNew->fill($data); // metodo colleagato al modello fillable nel file model in qst caso : shoe.php
         $saved = $shoeNew->save();
-        dd($saved);
 
+        if ($saved) {
+            return redirect()->route('shoes.index'); //mi reindirizza alla pagina index usando la rotta
+        }
 
-        // $user = User::orderBy('id', 'desc')->first();
-        // return redirect()->route('users.show',$user);
     }
 
     /**
@@ -58,10 +61,18 @@ class ShoeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-    }
+
+     public function show(Shoe $shoe)  //stesso raggionamento di : public function store(Request $request)
+     {
+        return view('show',compact('shoe'));
+     }
+
+     //metodo precedente per show:
+    // public function show($id)
+    // {
+    //     $shoe =Shoe::find($id);
+    //     return view('show',compact('shoe'));  //mi restituisce solo quel articolo con quel id
+    // }
 
     /**
      * Show the form for editing the specified resource.

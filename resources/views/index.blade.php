@@ -4,7 +4,7 @@
     @foreach ($shoes as $shoe)
 
         <ul>
-            <li>{{$shoe->modello}}</li>
+            <a href="{{route('shoes.show',$shoe->id)}}"> <li>{{$shoe->modello}}</li> </a>
             <li>{{$shoe->marca}}</li>
             <li>{{$shoe->taglia}}</li>
 
